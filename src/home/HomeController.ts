@@ -4,9 +4,11 @@ import {HomeService} from "./HomeService";
 class HomeController {
 
     clicks = 0;
+    legacyMessage: string;
 
-    constructor(private homeService: HomeService) {
+    constructor(private homeService: HomeService, legacyService: any) {
         "ngInject";
+        this.legacyMessage = legacyService.getMessage();
     }
 
     click() {
