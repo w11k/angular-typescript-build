@@ -43,9 +43,9 @@ var developmentMode = false;
 
 var onError = function (err) {
     gutil.log(
-        gutil.colors.red.bold('[ERROR:'+ err.plugin+']:'),
+        gutil.colors.red.bold('[ERROR:' + err.plugin + ']:'),
         gutil.colors.bgRed(err.message),
-        gutil.colors.red.bold('in:'+err.fileName)
+        gutil.colors.red.bold('in:' + err.fileName)
     );
     this.emit('end');
 };
@@ -54,7 +54,16 @@ var onError = function (err) {
 // clean
 // ------------------------------------------------------------------
 gulp.task('clean', function () {
-    return del.sync([config.target]);
+    try {
+        del.sync([config.target]);
+    } catch (e) {
+        if (developmentMode) {
+            console.log(e);
+        }
+        else {
+            throw e;
+        }
+    }
 });
 
 // ------------------------------------------------------------------
@@ -151,7 +160,7 @@ gulp.task('build:copy', function () {
         copyStreams.push(
             gulp.src(source)
                 .pipe(cache("copy" + i))
-                .pipe(debug({title: "Copy:"}))
+                //.pipe(debug({title: "Copy:"}))
                 .pipe(gulp.dest(config.targetApp + "/" + dest)));
     }
     return merge(copyStreams);
@@ -164,16 +173,17 @@ gulp.task('build:copy', function () {
 function buildCss(useCache) {
     var scss = gulp.src(config.scssFiles, {nosort: true, cwd: "src"});
     scss = useCache ? scss.pipe(cache("scss")) : scss;
+    scss = scss.pipe(debug({title: "SCSS:"}));
     scss = developmentMode ? scss.pipe(sourcemaps.init()) : scss;
     scss = scss.pipe(sass().on('error', sass.logError));
     scss = developmentMode ? scss.pipe(sourcemaps.write()) : scss;
     scss = developmentMode ? scss.pipe(gulp.dest(config.targetApp)) : scss;
 
     var css = gulp.src(config.cssFiles, {nosort: true, cwd: "src"});
+    css = css.pipe(debug({title: "CSS:"}));
     css = css.pipe(cache("css"));
 
     var both = merge(scss, css);
-    both = both.pipe(debug({title: "CSS:"}));
     both = !developmentMode ? both.pipe(cssRebase()) : both;
     both = !developmentMode ? both.pipe(cssMin()) : both;
     both = !developmentMode ? both.pipe(concat("___.css")) : both;
