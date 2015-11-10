@@ -41,6 +41,10 @@ var config = new Config();
 var developmentMode = false;
 
 
+// ------------------------------------------------------------------
+// utils
+// ------------------------------------------------------------------
+
 var onError = function (err) {
     gutil.log(
         gutil.colors.red.bold('[ERROR:' + err.plugin + ']:'),
@@ -50,9 +54,25 @@ var onError = function (err) {
     this.emit('end');
 };
 
+function withTimestamp(filename) {
+    if (developmentMode) {
+        return filename;
+    }
+
+    var ts = parseInt((Date.now() - Date.parse("Jan 1, 2015")) / 1000);
+
+    var dotIndex = filename.lastIndexOf(".");
+    if (dotIndex === -1) {
+        return filename + "." + ts;
+    } else {
+        return filename.substr(0, dotIndex) + "." + ts + filename.substr(dotIndex);
+    }
+}
+
 // ------------------------------------------------------------------
 // clean
 // ------------------------------------------------------------------
+
 gulp.task('clean', function () {
     try {
         del.sync([config.target]);
@@ -84,12 +104,12 @@ gulp.task('build:vendor', [], function () {
     });
     var streamJs = gulp.src(js)
         //.pipe(debug({title: "Including vendor JS:"}))
-        .pipe(concat("vendor.js"))
+        .pipe(concat(withTimestamp("vendor.js")))
         .pipe(gulp.dest(config.targetApp + "/vendor"));
 
     var streamCss = gulp.src(css)
         //.pipe(debug({title: "Including vendor CSS:"}))
-        .pipe(concat("vendor.css"))
+        .pipe(concat(withTimestamp("vendor.css")))
         .pipe(gulp.dest(config.targetApp + "/vendor"));
 
     var streamSystemJs = gulp.src(

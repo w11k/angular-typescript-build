@@ -32,6 +32,7 @@
     "gulp-minify-css": "latest",
     "gulp-util": "latest",
     "gulp-watch": "latest",
+    "gulp-rev-all": "latest",
     "merge2": "latest",
     "stream-series": "latest",
     "run-sequence": "latest",
