@@ -37,16 +37,16 @@ var GulpConfig = (function () {
         ];
 
         this.cssFiles = [
-            "**/*.css"
+            "src/**/*.css"
         ];
 
         this.scssFiles = [
-            "!**/_*.scss",
-            "**/*.scss"
+            "src/!**/_*.scss",
+            "src/**/*.scss"
         ];
 
         this.scssRebuildAllFiles = [
-            "**/_*.scss"
+            "src/**/_*.scss"
         ];
 
         this.typeScriptDefinitions = [
@@ -54,15 +54,15 @@ var GulpConfig = (function () {
         ];
 
         this.typeScriptFiles = [
-            "**/*.ts"
+            "src/**/*.ts"
         ];
 
         this.typeScriptLintFiles = [
-            "**/*.ts"
+            "src/**/*.ts"
         ];
 
         this.javaScriptFiles = [
-            "**/*.js"
+            "src/**/*.js"
         ];
 
         this.copyFiles = [

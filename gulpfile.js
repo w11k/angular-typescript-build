@@ -166,7 +166,7 @@ gulp.task('build:copy', function () {
 // ------------------------------------------------------------------
 
 function buildCss(useCache) {
-    var scss = gulp.src(config.scssFiles, {nosort: true, cwd: "src"});
+    var scss = gulp.src(config.scssFiles, {nosort: true});
     scss = useCache ? scss.pipe(cache("scss")) : scss;
     scss = scss.pipe(debug({title: "SCSS:"}));
     scss = developmentMode ? scss.pipe(sourcemaps.init()) : scss;
@@ -174,7 +174,7 @@ function buildCss(useCache) {
     scss = developmentMode ? scss.pipe(sourcemaps.write()) : scss;
     scss = developmentMode ? scss.pipe(gulp.dest(config.targetApp)) : scss;
 
-    var css = gulp.src(config.cssFiles, {nosort: true, cwd: "src"});
+    var css = gulp.src(config.cssFiles, {nosort: true});
     css = css.pipe(debug({title: "CSS:"}));
     css = css.pipe(cache("css"));
 
@@ -202,7 +202,7 @@ gulp.task('build:cssNoCache', function () {
 // ------------------------------------------------------------------
 
 gulp.task('build:js', function () {
-    var s = gulp.src(config.javaScriptFiles, {nosort: true, cwd: "src"});
+    var s = gulp.src(config.javaScriptFiles, {nosort: true});
     s = s.pipe(cache("js"));
     s = developmentMode ? s.pipe(sourcemaps.init()) : s;
     s = s.pipe(ngAnnotate());
@@ -223,12 +223,12 @@ var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('build:ts', function () {
     if (developmentMode) {
-        gulp.src(config.typeScriptLintFiles, {cwd: "src"})
+        gulp.src(config.typeScriptLintFiles)
             .pipe(cache("lint:ts"))
             .pipe(tslint()).pipe(tslint.report('prose', {emitError: false}));
     }
 
-    var tsResult = gulp.src(config.typeScriptFiles, {cwd: "src"});
+    var tsResult = gulp.src(config.typeScriptFiles);
 
     tsResult = tsResult.pipe(addsrc(config.typeScriptDefinitions));
     tsResult = developmentMode ? tsResult.pipe(sourcemaps.init()) : tsResult;
@@ -312,15 +312,15 @@ gulp.task('browsersync', ["dev"], function () {
 
 gulp.task('watch', ["browsersync"], function () {
     developmentMode = true;
-    gulp.watch(config.typeScriptFiles, {cwd: "src"}, ["build:ts"]);
-    gulp.watch(config.javaScriptFiles, {cwd: "src"}, ["build:js"]);
-    gulp.watch(config.htmlFiles, {cwd: "src"}, ["build:html"]);
-    gulp.watch(config.scssFiles, {cwd: "src"}, ["build:css"]);
-    gulp.watch(config.scssRebuildAllFiles, {cwd: "src"}, ["build:cssNoCache"]);
+    gulp.watch(config.typeScriptFiles, {}, ["build:ts"]);
+    gulp.watch(config.javaScriptFiles, {}, ["build:js"]);
+    gulp.watch(config.htmlFiles, {}, ["build:html"]);
+    gulp.watch(config.scssFiles, {}, ["build:css"]);
+    gulp.watch(config.scssRebuildAllFiles, {}, ["build:cssNoCache"]);
 
     for (var i = 0; i < config.copyFiles.length; i++) {
-        var source = config.copyFiles[i][0];
         gulp.watch(source, {cwd: "."}, ["build:copy"]);
+        var source = config.copyFiles[i][0];
     }
 });
 
