@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require("lodash");
 var fs = require('fs');
 var del = require('del');
 var mkdirp = require('mkdirp');
@@ -23,6 +24,7 @@ var htmlmin = require('gulp-htmlmin');
 var browsersync = require('browser-sync');
 var cache = require('gulp-cached');
 var addsrc = require('gulp-add-src');
+var RevAll = require('gulp-rev-all');
 
 var sass = require('gulp-sass');
 var cssRebase = require('gulp-css-url-rebase');
@@ -39,35 +41,8 @@ var Config = require('./gulpfile.config');
 var config = new Config();
 
 var developmentMode = false;
+var targetApp = undefined;
 
-
-// ------------------------------------------------------------------
-// utils
-// ------------------------------------------------------------------
-
-var onError = function (err) {
-    gutil.log(
-        gutil.colors.red.bold('[ERROR:' + err.plugin + ']:'),
-        gutil.colors.bgRed(err.message),
-        gutil.colors.red.bold('in:' + err.fileName)
-    );
-    this.emit('end');
-};
-
-function withTimestamp(filename) {
-    if (developmentMode) {
-        return filename;
-    }
-
-    var ts = parseInt((Date.now() - Date.parse("Jan 1, 2015")) / 1000);
-
-    var dotIndex = filename.lastIndexOf(".");
-    if (dotIndex === -1) {
-        return filename + "." + ts;
-    } else {
-        return filename.substr(0, dotIndex) + "." + ts + filename.substr(dotIndex);
-    }
-}
 
 // ------------------------------------------------------------------
 // clean
@@ -99,17 +74,17 @@ gulp.task('build:vendor', [], function () {
         } else if (elem.substr(-4) === ".css") {
             css.push(elem);
         } else {
-            // TODO Warning 'unkown type'
+            throw "Unknown file type (must be .js or .css): " + elem;
         }
     });
     var streamJs = gulp.src(js)
-        //.pipe(debug({title: "Including vendor JS:"}))
-        .pipe(concat(withTimestamp("vendor.js")))
+        .pipe(debug({title: "Vendor JavaScript:"}))
+        .pipe(concat("vendor.js"))
         .pipe(gulp.dest(config.targetApp + "/vendor"));
 
     var streamCss = gulp.src(css)
-        //.pipe(debug({title: "Including vendor CSS:"}))
-        .pipe(concat(withTimestamp("vendor.css")))
+        .pipe(debug({title: "Vendor CSS:"}))
+        .pipe(concat("vendor.css"))
         .pipe(gulp.dest(config.targetApp + "/vendor"));
 
     var streamSystemJs = gulp.src(
@@ -138,9 +113,9 @@ gulp.task('build:vendor', [], function () {
 // ------------------------------------------------------------------
 
 gulp.task('build:html', [], function () {
-    var s = gulp.src(config.htmlFiles, {cwd: "src"});
+    var s = gulp.src(config.htmlFiles);
     s = s.pipe(cache("html"));
-    //s = s.pipe(debug({title: "HTML:"}));
+    s = s.pipe(debug({title: "HTML:"}));
     s = s.pipe(gulp.dest(config.targetApp));
     s = s.pipe(inject(series(
         gulp.src(
@@ -180,7 +155,7 @@ gulp.task('build:copy', function () {
         copyStreams.push(
             gulp.src(source)
                 .pipe(cache("copy" + i))
-                //.pipe(debug({title: "Copy:"}))
+                .pipe(debug({title: "Copy (-> " + dest + "):"}))
                 .pipe(gulp.dest(config.targetApp + "/" + dest)));
     }
     return merge(copyStreams);
@@ -233,7 +208,7 @@ gulp.task('build:js', function () {
     s = s.pipe(ngAnnotate());
     s = s.pipe(uglify());
     s = developmentMode ? s.pipe(sourcemaps.write()) : s;
-    //s = s.pipe(debug({title: "JavaScript:"}));
+    s = s.pipe(debug({title: "JavaScript:"}));
     s = s.pipe(gulp.dest(config.targetJs));
     s = s.pipe(browsersync.stream());
     return s;
@@ -293,7 +268,33 @@ gulp.task('bundle', [], function (done) {
         .catch(function (err) {
             console.log('Build error');
             console.log(err);
+            throw err;
         });
+});
+
+
+// ------------------------------------------------------------------
+// Revision
+// ------------------------------------------------------------------
+
+gulp.task('revision', [], function () {
+    config.targetApp = targetApp;
+    var revAll = new RevAll(config.revAllOptions);
+    return gulp.src(config.target + "/tmp/**")
+        .pipe(debug({title: "Revision:"}))
+        .pipe(revAll.revision())
+        .pipe(gulp.dest(config.targetApp))
+        .pipe(revAll.versionFile())
+        .pipe(gulp.dest(config.targetApp));
+});
+
+// ------------------------------------------------------------------
+// Dist Cleanup
+// ------------------------------------------------------------------
+
+gulp.task('dist:cleanup', [], function () {
+    del.sync([config.targetJs]);
+    del.sync([config.target + "/tmp"]);
 });
 
 
@@ -336,15 +337,33 @@ gulp.task('dev', function (callback) {
 });
 
 gulp.task('dist', function (callback) {
-
     config.targetJs = config.target + "/tmpJs";
+    targetApp = config.targetApp;
+    config.targetApp = config.target + "/tmp";
 
     sequence(
         "clean",
         ["build:vendor", "build:copy", "build:js", "build:ts", "build:css"],
         "bundle",
         "build:html",
+        "revision",
+        "dist:cleanup",
         callback);
 });
 
 gulp.task('default', ["watch"]);
+
+
+// ------------------------------------------------------------------
+// utils
+// ------------------------------------------------------------------
+
+var onError = function (err) {
+    gutil.log(
+        gutil.colors.red.bold('[ERROR:' + err.plugin + ']:'),
+        gutil.colors.bgRed(err.message),
+        gutil.colors.red.bold('in:' + err.fileName)
+    );
+    this.emit('end');
+};
+

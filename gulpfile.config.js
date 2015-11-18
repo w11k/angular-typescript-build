@@ -28,8 +28,12 @@ var GulpConfig = (function () {
         // Source Paths
         // ----------------------------------------------------------
 
+        this.revAllOptions = {
+            dontRenameFile: ["index.html"]
+        };
+
         this.htmlFiles = [
-            "**/*.html"
+            "src/**/*.html"
         ];
 
         this.cssFiles = [
@@ -87,7 +91,7 @@ var GulpConfig = (function () {
 
         this.target = "target";
 
-        this.targetApp = this.target + "/app";
+        this.targetApp = this.target + "/build";
 
         this.targetJs = this.targetApp;
 
