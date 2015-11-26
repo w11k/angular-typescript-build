@@ -13,7 +13,7 @@ var path = require("path");
 var Builder = require('systemjs-builder');
 
 var gulp = require('gulp');
-var debug = require('gulp-debug');
+var gulpDebug = require('gulp-debug');
 var concat = require('gulp-concat');
 var watch = require('gulp-watch');
 var sourcemaps = require('gulp-sourcemaps');
@@ -367,3 +367,10 @@ var onError = function (err) {
     this.emit('end');
 };
 
+function debug(config) {
+    if (developmentMode) {
+        return gutil.noop();
+    } else {
+        return gulpDebug(config);
+    }
+}

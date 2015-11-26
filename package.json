@@ -1,7 +1,9 @@
 {
   "name": "client",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "tsd": "^0.6.5"
+  },
   "devDependencies": {
     "browser-sync": "latest",
     "casperjs": "latest",
