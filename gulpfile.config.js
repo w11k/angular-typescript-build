@@ -32,37 +32,40 @@ var GulpConfig = (function () {
             dontRenameFile: ["index.html"]
         };
 
+        // Relative to Root folder
+
         this.htmlFiles = [
-            "src/**/*.html"
+            "**/*.html"
         ];
 
         this.cssFiles = [
-            "src/**/*.css"
+            "**/*.css"
         ];
 
         this.scssFiles = [
-            "src/!**/_*.scss",
-            "src/**/*.scss"
+            "!**/_*.scss",
+            "**/*.scss"
         ];
 
         this.scssRebuildAllFiles = [
-            "src/**/_*.scss"
-        ];
-
-        this.typeScriptDefinitions = [
-            "typings/tsd.d.ts"
+            "**/_*.scss"
         ];
 
         this.typeScriptFiles = [
-            "src/**/*.ts"
+            "**/*.ts"
         ];
-
         this.typeScriptLintFiles = [
-            "src/**/*.ts"
+            "**/*.ts"
         ];
 
         this.javaScriptFiles = [
-            "src/**/*.js"
+            "**/*.js"
+        ];
+
+        // Relative to Root folder
+
+        this.typeScriptDefinitions = [
+            "typings/tsd.d.ts"
         ];
 
         this.copyFiles = [

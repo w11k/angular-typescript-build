@@ -8,7 +8,7 @@ rm -rf bower_components
 rm -rf typings
 
 npm install
-bower install
-tsd install
+./node_modules/.bin/bower install
+./node_modules/.bin/tsd install
 
 
