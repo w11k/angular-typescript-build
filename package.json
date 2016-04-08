@@ -39,7 +39,6 @@
     "stream-series": "latest",
     "systemjs": "0.18.4",
     "systemjs-builder": "0.12.2",
-    "tsd": "latest",
     "typescript": "1.6.2",
     "vinyl-buffer": "latest",
     "vinyl-source-stream": "latest"
