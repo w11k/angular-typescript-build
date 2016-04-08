@@ -79,7 +79,9 @@ gulp.task('build:vendor', [], function () {
     });
     var streamJs = gulp.src(js)
         .pipe(debug({title: "Vendor JavaScript:"}))
+        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat("vendor.js"))
+        .pipe(sourcemaps.write('/'))
         .pipe(gulp.dest(config.targetApp + "/vendor"));
 
     var streamCss = gulp.src(css)
@@ -207,7 +209,7 @@ gulp.task('build:js', function () {
     s = developmentMode ? s.pipe(sourcemaps.init()) : s;
     s = s.pipe(ngAnnotate());
     s = s.pipe(uglify());
-    s = developmentMode ? s.pipe(sourcemaps.write()) : s;
+    s = developmentMode ? s.pipe(sourcemaps.write('/')) : s;
     s = s.pipe(debug({title: "JavaScript:"}));
     s = s.pipe(gulp.dest(config.targetJs));
     s = s.pipe(browsersync.stream());
@@ -242,7 +244,9 @@ gulp.task('build:ts', function () {
     tsResultJs = tsResultJs.pipe(browsersync.stream());
 
     if (developmentMode) {
-        tsResultJs = tsResultJs.pipe(sourcemaps.write());
+        tsResultJs = tsResultJs.pipe(sourcemaps.write(".", {includeContent: false, sourceRoot: function(file) {
+            return path.relative(file.path, __dirname + '/src').replace(path.sep, '/') + '/../src';
+        }}));
     }
 
     return merge([

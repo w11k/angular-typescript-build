@@ -1,0 +1,9 @@
+{
+  "name": "client",
+  "version": false,
+  "ambientDependencies": {
+    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#43b6bf88758852b9ab713a9b011487f047f94f4e",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#43b6bf88758852b9ab713a9b011487f047f94f4e",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#76e1dedf0bada455c0b75abeec3206d3aa5bd892"
+  }
+}
