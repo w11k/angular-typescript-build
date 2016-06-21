@@ -1,11 +1,18 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "target": "ES5",
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "mapRoot": "/",
     "module": "system",
+    "moduleResolution": "node",
     "noEmitOnError": false,
     "noImplicitAny": true,
-    "removeComments": false,
-    "preserveConstEnums": true
-  },
-  "files": []
+    "outDir": "target/tscompiled",
+    "rootDir": ".",
+    "sourceMap": true,
+    "target": "es5",
+    "inlineSources": true
+  }
 }

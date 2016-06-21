@@ -65,7 +65,7 @@ var GulpConfig = (function () {
         // Relative to Root folder
 
         this.typeScriptDefinitions = [
-            "typings/browser.d.ts"
+            "typings/main.d.ts"
         ];
 
         this.copyFiles = [
