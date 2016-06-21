@@ -25,6 +25,10 @@ var GulpConfig = (function () {
             "bower_components/animate.css/animate.min.css"
         ];
 
+        this.nodeModulesCopy = [
+                "rxjs"
+        ];
+
         // ----------------------------------------------------------
         // Source Paths
         // ----------------------------------------------------------
@@ -38,16 +42,16 @@ var GulpConfig = (function () {
         ];
 
         this.cssFiles = [
-            "**/*.css"
+            "src/**/*.css"
         ];
 
         this.scssFiles = [
-            "!**/_*.scss",
-            "**/*.scss"
+            "!src/**/_*.scss",
+            "src/**/*.scss"
         ];
 
         this.scssRebuildAllFiles = [
-            "**/_*.scss"
+            "src/**/_*.scss"
         ];
 
         this.typeScriptFiles = [

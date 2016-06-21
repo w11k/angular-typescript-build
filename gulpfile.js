@@ -78,21 +78,21 @@ gulp.task('build:vendor', [], function () {
         }
     });
     var streamJs = gulp.src(js)
-        .pipe(debug({title: "Vendor JavaScript:"}))
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(concat("vendor.js"))
-        .pipe(sourcemaps.write('/'))
-        .pipe(gulp.dest(config.targetApp + "/vendor"));
+            .pipe(debug({title: "Vendor JavaScript:"}))
+            .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe(concat("vendor.js"))
+            .pipe(sourcemaps.write('/'))
+            .pipe(gulp.dest(config.targetApp + "/vendor"));
 
     var streamCss = gulp.src(css)
-        .pipe(debug({title: "Vendor CSS:"}))
-        .pipe(concat("vendor.css"))
-        .pipe(gulp.dest(config.targetApp + "/vendor"));
+            .pipe(debug({title: "Vendor CSS:"}))
+            .pipe(concat("vendor.css"))
+            .pipe(gulp.dest(config.targetApp + "/vendor"));
 
     var streamSystemJs = gulp.src(
-        ["system-polyfills.js", "system.js"],
-        {cwd: "node_modules/systemjs/dist"})
-        .pipe(gulp.dest(config.targetApp + "/systemjs"));
+            ["system-polyfills.js", "system.js"],
+            {cwd: "node_modules/systemjs/dist"})
+            .pipe(gulp.dest(config.targetApp + "/systemjs"));
 
     if (developmentMode) {
         var entryGenerated = "";
@@ -111,6 +111,21 @@ gulp.task('build:vendor', [], function () {
 });
 
 // ------------------------------------------------------------------
+// nodeModules copy
+// ------------------------------------------------------------------
+
+gulp.task('build:nodeModulesCopy', [], function () {
+    var copyStreams = [];
+    for (var i = 0; i < config.nodeModulesCopy.length; i++) {
+        var module = config.nodeModulesCopy[i];
+        copyStreams.push(
+                gulp.src(module + "/**/*", {cwd: "node_modules"})
+                        .pipe(gulp.dest(config.targetJs + "/" + module)));
+    }
+    return merge(copyStreams);
+});
+
+// ------------------------------------------------------------------
 // Build HTML
 // ------------------------------------------------------------------
 
@@ -120,17 +135,17 @@ gulp.task('build:html', [], function () {
     s = s.pipe(debug({title: "HTML:"}));
     s = s.pipe(gulp.dest(config.targetApp));
     s = s.pipe(inject(series(
-        gulp.src(
-            ["vendor/**/*.js", "vendor/**/*.css"],
-            {read: false, cwd: config.targetApp}),
+            gulp.src(
+                    ["vendor/**/*.js", "vendor/**/*.css"],
+                    {read: false, cwd: config.targetApp}),
 
-        gulp.src(
-            ["systemjs/system.js", "systemjs/system-polyfills.js", "systemjs/entry-generated.js"],
-            {read: false, cwd: config.targetApp}),
+            gulp.src(
+                    ["systemjs/system.js", "systemjs/system-polyfills.js", "systemjs/entry-generated.js"],
+                    {read: false, cwd: config.targetApp}),
 
-        gulp.src(
-            ['**/*.css', "!vendor/**", "!systemjs/**"],
-            {read: false, cwd: config.targetApp})
+            gulp.src(
+                    ['**/*.css', "!vendor/**", "!systemjs/**"],
+                    {read: false, cwd: config.targetApp})
     ), {relative: true, quiet: true}));
     s = s.pipe(htmlmin({
         removeComments: true,
@@ -155,10 +170,10 @@ gulp.task('build:copy', function () {
         var source = config.copyFiles[i][0];
         var dest = config.copyFiles[i][1];
         copyStreams.push(
-            gulp.src(source)
-                .pipe(cache("copy" + i))
-                .pipe(debug({title: "Copy (-> " + dest + "):"}))
-                .pipe(gulp.dest(config.targetApp + "/" + dest)));
+                gulp.src(source)
+                        .pipe(cache("copy" + i))
+                        .pipe(debug({title: "Copy (-> " + dest + "):"}))
+                        .pipe(gulp.dest(config.targetApp + "/" + dest)));
     }
     return merge(copyStreams);
 });
@@ -168,7 +183,7 @@ gulp.task('build:copy', function () {
 // ------------------------------------------------------------------
 
 function buildCss(useCache) {
-    var scss = gulp.src(config.scssFiles, {nosort: true, cwd: "src"});
+    var scss = gulp.src(config.scssFiles, {nosort: true});
     scss = useCache ? scss.pipe(cache("scss")) : scss;
     scss = scss.pipe(debug({title: "SCSS:"}));
     scss = developmentMode ? scss.pipe(sourcemaps.init()) : scss;
@@ -176,7 +191,7 @@ function buildCss(useCache) {
     scss = developmentMode ? scss.pipe(sourcemaps.write()) : scss;
     scss = developmentMode ? scss.pipe(gulp.dest(config.targetApp)) : scss;
 
-    var css = gulp.src(config.cssFiles, {nosort: true, cwd: "src"});
+    var css = gulp.src(config.cssFiles, {nosort: true});
     css = css.pipe(debug({title: "CSS:"}));
     css = css.pipe(cache("css"));
 
@@ -208,8 +223,8 @@ var tsProject = ts.createProject('tsconfig.json');
 gulp.task('build:ts', function () {
     if (developmentMode) {
         gulp.src(config.typeScriptLintFiles)
-            .pipe(cache("lint:ts"))
-            .pipe(tslint()).pipe(tslint.report('prose', {emitError: false}));
+                .pipe(cache("lint:ts"))
+                .pipe(tslint()).pipe(tslint.report('prose', {emitError: false}));
     }
 
     var tsResult = gulp.src(config.typeScriptFiles);
@@ -226,9 +241,10 @@ gulp.task('build:ts', function () {
     tsResultJs = tsResultJs.pipe(browsersync.stream());
 
     if (developmentMode) {
-        tsResultJs = tsResultJs.pipe(sourcemaps.write(".", {includeContent: false, sourceRoot: function(file) {
-            return path.relative(file.path, __dirname + '/src').replace(path.sep, '/') + '/../src';
-        }}));
+        // tsResultJs = tsResultJs.pipe(sourcemaps.write(".", {includeContent: false, sourceRoot: function(file) {
+        //     return path.relative(file.path, __dirname + '/src').replace(path.sep, '/') + '/../src';
+        // }}));
+        tsResultJs = tsResultJs.pipe(sourcemaps.write());
     }
 
     return merge([
@@ -247,15 +263,15 @@ gulp.task('bundle', [], function (done) {
     config.systemJSConfig.baseURL = config.targetJs + "/" + config.systemJSConfig.baseURL;
 
     new Builder(config.systemJSConfig)
-        .buildSFX(config.systemImportMain, config.targetApp + "/systemjs/entry-generated.js", {minify: true})
-        .then(function () {
-            done();
-        })
-        .catch(function (err) {
-            console.log('Build error');
-            console.log(err);
-            throw err;
-        });
+            .buildSFX(config.systemImportMain, config.targetApp + "/systemjs/entry-generated.js", {minify: true})
+            .then(function () {
+                done();
+            })
+            .catch(function (err) {
+                console.log('Build error');
+                console.log(err);
+                throw err;
+            });
 });
 
 
@@ -267,11 +283,11 @@ gulp.task('revision', [], function () {
     config.targetApp = targetApp;
     var revAll = new RevAll(config.revAllOptions);
     return gulp.src(config.target + "/tmp/**")
-        .pipe(debug({title: "Revision:"}))
-        .pipe(revAll.revision())
-        .pipe(gulp.dest(config.targetApp))
-        .pipe(revAll.versionFile())
-        .pipe(gulp.dest(config.targetApp));
+            .pipe(debug({title: "Revision:"}))
+            .pipe(revAll.revision())
+            .pipe(gulp.dest(config.targetApp))
+            .pipe(revAll.versionFile())
+            .pipe(gulp.dest(config.targetApp));
 });
 
 // ------------------------------------------------------------------
@@ -300,8 +316,8 @@ gulp.task('watch', ["browsersync"], function () {
     developmentMode = true;
     gulp.watch(config.typeScriptFiles, {}, ["build:ts"]);
     gulp.watch(config.htmlFiles, {}, ["build:html"]);
-    gulp.watch(config.scssFiles, {cwd: "src"}, ["build:css"]);
-    gulp.watch(config.scssRebuildAllFiles, {cwd: "src"}, ["build:cssNoCache"]);
+    gulp.watch(config.scssFiles, {}, ["build:css"]);
+    gulp.watch(config.scssRebuildAllFiles, {}, ["build:cssNoCache"]);
 
     for (var i = 0; i < config.copyFiles.length; i++) {
         var source = config.copyFiles[i][0];
@@ -315,10 +331,10 @@ gulp.task('dev', function (callback) {
 
     developmentMode = true;
     sequence(
-        "clean",
-        ["build:vendor", "build:copy", "build:ts", "build:css"],
-        "build:html",
-        callback);
+            ["build:vendor", "build:copy", "build:nodeModulesCopy"],
+            ["build:ts", "build:css"],
+            "build:html",
+            callback);
 });
 
 gulp.task('dist', function (callback) {
@@ -327,13 +343,14 @@ gulp.task('dist', function (callback) {
     config.targetApp = config.target + "/tmp";
 
     sequence(
-        "clean",
-        ["build:vendor", "build:copy", "build:ts", "build:css"],
-        "bundle",
-        "build:html",
-        "revision",
-        "dist:cleanup",
-        callback);
+            "clean",
+            ["build:vendor", "build:copy", "build:nodeModulesCopy"],
+            ["build:ts", "build:css"],
+            "bundle",
+            "build:html",
+            "revision",
+            "dist:cleanup",
+            callback);
 });
 
 gulp.task('default', ["watch"]);
@@ -345,9 +362,9 @@ gulp.task('default', ["watch"]);
 
 var onError = function (err) {
     gutil.log(
-        gutil.colors.red.bold('[ERROR:' + err.plugin + ']:'),
-        gutil.colors.bgRed(err.message),
-        gutil.colors.red.bold('in:' + err.fileName)
+            gutil.colors.red.bold('[ERROR:' + err.plugin + ']:'),
+            gutil.colors.bgRed(err.message),
+            gutil.colors.red.bold('in:' + err.fileName)
     );
     this.emit('end');
 };
