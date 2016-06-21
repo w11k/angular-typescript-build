@@ -1,4 +1,5 @@
 'use strict';
+
 var GulpConfig = (function () {
     function GulpConfig() {
 
@@ -65,7 +66,7 @@ var GulpConfig = (function () {
         // Relative to Root folder
 
         this.typeScriptDefinitions = [
-            "typings/main.d.ts"
+            "typings/index.d.ts"
         ];
 
         this.copyFiles = [
