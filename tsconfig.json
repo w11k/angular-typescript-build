@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowJs": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -9,7 +10,6 @@
     "moduleResolution": "node",
     "noEmitOnError": false,
     "noImplicitAny": true,
-    "outDir": "target/tscompiled",
     "rootDir": ".",
     "sourceMap": true,
     "target": "es5",

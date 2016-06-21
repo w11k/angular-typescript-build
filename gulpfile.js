@@ -115,7 +115,7 @@ gulp.task('build:vendor', [], function () {
 // ------------------------------------------------------------------
 
 gulp.task('build:html', [], function () {
-    var s = gulp.src(config.htmlFiles, {nosort: true, cwd: "src"});
+    var s = gulp.src(config.htmlFiles, {nosort: true});
     s = s.pipe(cache("html"));
     s = s.pipe(debug({title: "HTML:"}));
     s = s.pipe(gulp.dest(config.targetApp));
@@ -200,24 +200,6 @@ gulp.task('build:cssNoCache', function () {
 });
 
 // ------------------------------------------------------------------
-// Build JavaScript
-// ------------------------------------------------------------------
-
-gulp.task('build:js', function () {
-    var s = gulp.src(config.javaScriptFiles, {nosort: true, cwd: "src"});
-    s = s.pipe(cache("js"));
-    s = developmentMode ? s.pipe(sourcemaps.init()) : s;
-    s = s.pipe(ngAnnotate());
-    s = s.pipe(uglify());
-    s = developmentMode ? s.pipe(sourcemaps.write('/')) : s;
-    s = s.pipe(debug({title: "JavaScript:"}));
-    s = s.pipe(gulp.dest(config.targetJs));
-    s = s.pipe(browsersync.stream());
-    return s;
-});
-
-
-// ------------------------------------------------------------------
 // Build TypeScript
 // ------------------------------------------------------------------
 
@@ -225,14 +207,14 @@ var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('build:ts', function () {
     if (developmentMode) {
-        gulp.src(config.typeScriptLintFiles, {cwd: "src"})
+        gulp.src(config.typeScriptLintFiles)
             .pipe(cache("lint:ts"))
             .pipe(tslint()).pipe(tslint.report('prose', {emitError: false}));
     }
 
-    var tsResult = gulp.src(config.typeScriptFiles, {cwd: "src"});
+    var tsResult = gulp.src(config.typeScriptFiles);
 
-    tsResult = tsResult.pipe(addsrc(config.typeScriptDefinitions));
+    // tsResult = tsResult.pipe(addsrc(config.typeScriptDefinitions));
     tsResult = developmentMode ? tsResult.pipe(sourcemaps.init()) : tsResult;
     tsResult = tsResult.pipe(ts(tsProject, undefined, ts.reporter.longReporter()));
 
@@ -316,9 +298,8 @@ gulp.task('browsersync', ["dev"], function () {
 
 gulp.task('watch', ["browsersync"], function () {
     developmentMode = true;
-    gulp.watch(config.typeScriptFiles, {cwd: "src"}, ["build:ts"]);
-    gulp.watch(config.javaScriptFiles, {cwd: "src"}, ["build:js"]);
-    gulp.watch(config.htmlFiles, {cwd: "src"}, ["build:html"]);
+    gulp.watch(config.typeScriptFiles, {}, ["build:ts"]);
+    gulp.watch(config.htmlFiles, {}, ["build:html"]);
     gulp.watch(config.scssFiles, {cwd: "src"}, ["build:css"]);
     gulp.watch(config.scssRebuildAllFiles, {cwd: "src"}, ["build:cssNoCache"]);
 
@@ -335,7 +316,7 @@ gulp.task('dev', function (callback) {
     developmentMode = true;
     sequence(
         "clean",
-        ["build:vendor", "build:copy", "build:js", "build:ts", "build:css"],
+        ["build:vendor", "build:copy", "build:ts", "build:css"],
         "build:html",
         callback);
 });
@@ -347,7 +328,7 @@ gulp.task('dist', function (callback) {
 
     sequence(
         "clean",
-        ["build:vendor", "build:copy", "build:js", "build:ts", "build:css"],
+        ["build:vendor", "build:copy", "build:ts", "build:css"],
         "bundle",
         "build:html",
         "revision",
