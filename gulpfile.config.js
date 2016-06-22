@@ -26,7 +26,7 @@ var GulpConfig = (function () {
         ];
 
         this.nodeModulesCopy = [
-                "rxjs"
+            "rxjs"
         ];
 
         // ----------------------------------------------------------

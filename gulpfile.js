@@ -118,8 +118,11 @@ gulp.task('build:nodeModulesCopy', [], function () {
     var copyStreams = [];
     for (var i = 0; i < config.nodeModulesCopy.length; i++) {
         var module = config.nodeModulesCopy[i];
+        var sources = [
+            module + "/**/*.js"
+        ];
         copyStreams.push(
-                gulp.src(module + "/**/*", {cwd: "node_modules"})
+                gulp.src(sources, {cwd: "node_modules"})
                         .pipe(gulp.dest(config.targetJs + "/" + module)));
     }
     return merge(copyStreams);
