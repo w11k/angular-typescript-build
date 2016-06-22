@@ -218,7 +218,7 @@ gulp.task('build:cssNoCache', function () {
 // Build TypeScript
 // ------------------------------------------------------------------
 
-var tsProject = ts.createProject('tsconfig.json');
+var tsProject = ts.createProject('src/tsconfig.json');
 
 gulp.task('build:ts', function () {
     if (developmentMode) {

@@ -11,6 +11,7 @@
     "noEmitOnError": false,
     "noImplicitAny": true,
     "rootDir": ".",
+    "outDir": "../target/compiled_by_ide",
     "sourceMap": true,
     "target": "es5",
     "inlineSources": true
