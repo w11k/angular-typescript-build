@@ -43,6 +43,7 @@
     "systemjs": "0.18.4",
     "systemjs-builder": "0.12.2",
     "typescript": "^1.8.0",
+    "typings": "latest",
     "vinyl-buffer": "latest",
     "vinyl-source-stream": "latest"
   },
