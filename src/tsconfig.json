@@ -12,8 +12,9 @@
     "noImplicitAny": true,
     "rootDir": ".",
     "outDir": "../target/compiled_by_ide",
-    "sourceMap": true,
-    "target": "es5",
-    "inlineSources": true
+    "target": "es5"
+    //,
+    //    "sourceMap": true,
+    //    "inlineSources": true
   }
 }

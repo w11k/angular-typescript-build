@@ -244,10 +244,8 @@ gulp.task('build:ts', function () {
     tsResultJs = tsResultJs.pipe(browsersync.stream());
 
     if (developmentMode) {
-        // tsResultJs = tsResultJs.pipe(sourcemaps.write(".", {includeContent: false, sourceRoot: function(file) {
-        //     return path.relative(file.path, __dirname + '/src').replace(path.sep, '/') + '/../src';
-        // }}));
-        tsResultJs = tsResultJs.pipe(sourcemaps.write());
+        tsResultJs = tsResultJs.pipe(sourcemaps.write(".", {includeContent: true, sourceRoot: "/"}));
+        // tsResultJs = tsResultJs.pipe(sourcemaps.write());
     }
 
     return merge([
