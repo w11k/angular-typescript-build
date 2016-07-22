@@ -227,7 +227,10 @@ gulp.task('build:ts', function () {
     if (developmentMode) {
         gulp.src(config.typeScriptLintFiles)
                 .pipe(cache("lint:ts"))
-                .pipe(tslint()).pipe(tslint.report('prose', {emitError: false}));
+                .pipe(tslint()).pipe(tslint.report({
+            formatter: "verbose",
+            emitError: false
+        }));
     }
 
     var tsResult = gulp.src(config.typeScriptFiles);
