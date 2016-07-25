@@ -26,7 +26,8 @@ var GulpConfig = (function () {
         ];
 
         this.nodeModulesCopy = [
-            "rxjs"
+            "rxjs",
+            "lodash"
         ];
 
         // ----------------------------------------------------------
@@ -80,6 +81,10 @@ var GulpConfig = (function () {
 
             "paths": {
                 "*": "*.js"
+            },
+
+            map: {
+                lodash: 'lodash/lodash.min'
             }
         };
 

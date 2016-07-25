@@ -4,7 +4,7 @@
   "dependencies": {
 
     "jquery": "~1.9.1",
-    "lodash": "3.10.0",
+    "lodash": "4.14.0",
 
     "angular": "1.4.7",
     "angular-animate": "1.4.7",
