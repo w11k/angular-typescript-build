@@ -1,12 +1,14 @@
 {
-  "name": "client",
+  "name": "app",
   "version": "0.0.0",
   "dependencies": {
+    "@types/lodash": "^4.14.0",
     "es6-shim": "0.35.1",
     "lodash": "^4.14.0",
     "rxjs": "5.0.0-beta.6"
   },
   "devDependencies": {
+    "awesome-typescript-loader": "^2.2.4",
     "bower": "^1.6.8",
     "browser-sync": "latest",
     "connect-livereload": "~0.2.0",
@@ -28,25 +30,28 @@
     "gulp-sass": "latest",
     "gulp-sourcemaps": "latest",
     "gulp-tslint": "^6.0.0",
-    "tslint": "^3.13.0",
     "gulp-typescript": "latest",
     "gulp-uglify": "latest",
     "gulp-util": "latest",
     "gulp-watch": "latest",
     "karma": "latest",
-    "lodash": "3.10.1",
     "lodash.assign": "latest",
     "matchdep": "~0.1.2",
     "merge2": "latest",
     "mkdirp": "latest",
+    "path": "^0.12.7",
     "run-sequence": "latest",
     "stream-series": "latest",
     "systemjs": "0.18.4",
     "systemjs-builder": "0.12.2",
-    "typescript": "^1.8.0",
+    "tslint": "^3.13.0",
+    "tslint-loader": "^2.1.5",
+    "typescript": "^2.0.0",
     "typings": "latest",
     "vinyl-buffer": "latest",
-    "vinyl-source-stream": "latest"
+    "vinyl-source-stream": "latest",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.1"
   },
   "engines": {
     "node": ">=0.8.0"

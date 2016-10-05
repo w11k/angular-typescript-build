@@ -1,8 +1,23 @@
-// Import ES6/TypeScript modules
-require("./initModules");
+// global libs
 
-// Load plain JavaScript 'script files'
-require("./initScripts");
+require("lodash");
+require("angular");
+require("angular-cookies");
+require("angular-sanitize");
+require("angular-animate");
+require("angular-ui-router");
+require("angular-bootstrap");
+
+
+// app modules
+
+require("./app");
+require("./routes");
+require("./home/HomeService");
+// require("./home/HomeController");
+// require("./legacy/LegacyService");
+
 
 // Bootstrap Angular
-angular.bootstrap(document, ["app"], {strictDi: true});
+
+// angular.bootstrap(document, ["app"], {strictDi: true});

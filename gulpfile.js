@@ -114,19 +114,19 @@ gulp.task('build:vendor', [], function () {
 // nodeModules copy
 // ------------------------------------------------------------------
 
-gulp.task('build:nodeModulesCopy', [], function () {
-    var copyStreams = [];
-    for (var i = 0; i < config.nodeModulesCopy.length; i++) {
-        var module = config.nodeModulesCopy[i];
-        var sources = [
-            module + "/**/*.js"
-        ];
-        copyStreams.push(
-                gulp.src(sources, {cwd: "node_modules"})
-                        .pipe(gulp.dest(config.targetJs + "/" + module)));
-    }
-    return merge(copyStreams);
-});
+// gulp.task('build:nodeModulesCopy', [], function () {
+//     var copyStreams = [];
+//     for (var i = 0; i < config.nodeModulesCopy.length; i++) {
+//         var module = config.nodeModulesCopy[i];
+//         var sources = [
+//             module + "/**/*.js"
+//         ];
+//         copyStreams.push(
+//                 gulp.src(sources, {cwd: "node_modules"})
+//                         .pipe(gulp.dest(config.targetJs + "/" + module)));
+//     }
+//     return merge(copyStreams);
+// });
 
 // ------------------------------------------------------------------
 // Build HTML
@@ -237,7 +237,7 @@ gulp.task('build:ts', function () {
 
     // tsResult = tsResult.pipe(addsrc(config.typeScriptDefinitions));
     tsResult = developmentMode ? tsResult.pipe(sourcemaps.init()) : tsResult;
-    tsResult = tsResult.pipe(ts(tsProject, undefined, ts.reporter.longReporter()));
+    tsResult = tsResult.pipe(tsProject(ts.reporter.longReporter()));
 
     var tsResultJs = tsResult.js;
     tsResultJs = tsResultJs.pipe(cache("ts"));
@@ -272,7 +272,6 @@ gulp.task('bundle', [], function (done) {
                 done();
             })
             .catch(function (err) {
-                console.log('Build error');
                 console.log(err);
                 throw err;
             });
@@ -335,7 +334,7 @@ gulp.task('dev', function (callback) {
 
     developmentMode = true;
     sequence(
-            ["build:vendor", "build:copy", "build:nodeModulesCopy"],
+            ["build:vendor", "build:copy"/*, "build:nodeModulesCopy"*/],
             ["build:ts", "build:css"],
             "build:html",
             callback);
@@ -348,7 +347,7 @@ gulp.task('dist', function (callback) {
 
     sequence(
             "clean",
-            ["build:vendor", "build:copy", "build:nodeModulesCopy"],
+            ["build:vendor", "build:copy"/*, "build:nodeModulesCopy"*/],
             ["build:ts", "build:css"],
             "bundle",
             "build:html",

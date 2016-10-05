@@ -1,19 +1,21 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "mapRoot": "/",
-    "module": "system",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": false,
     "noImplicitAny": true,
-    "rootDir": ".",
-    "outDir": "../target/compiled_by_ide",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "rootDir": "src",
     "target": "es5"
     //,
+//    "mapRoot": "/"
     //    "sourceMap": true,
     //    "inlineSources": true
   }
