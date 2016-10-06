@@ -1,4 +1,4 @@
-import { appModule } from "../app";
+import {appModule} from "../app";
 
 export class HomeService {
 
@@ -11,16 +11,18 @@ export class HomeService {
             return i > 1;
         });
         console.log(l);
+        console.log(l);
+        console.log(l);
+        console.log(l);
 
         return this.counter++;
     }
 
 }
 
-let abcdef = 123456789;
-console.log(abcdef);
 appModule.service("homeService", HomeService);
 
 
 // TEST
-console.log(HomeService);
+const hs = new HomeService();
+console.log(hs.getAndIncrement());

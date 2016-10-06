@@ -14,9 +14,5 @@
     "strictNullChecks": true,
     "rootDir": "src",
     "target": "es5"
-    //,
-//    "mapRoot": "/"
-    //    "sourceMap": true,
-    //    "inlineSources": true
   }
 }

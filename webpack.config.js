@@ -31,12 +31,12 @@ module.exports = {
             path.resolve('./bower_components')
         ]
     },
+    devtool: 'source-map',
     // devtool: 'source-map',
-    // devtool: 'source-map',
-    devtool: 'cheap-module-eval-source-map',
-    devServer: {
-        inline: true
-    },
+    // devtool: 'cheap-module-eval-source-map',
+    // devServer: {
+    //     inline: true
+    // },
     module: {
         loaders: [
             {
@@ -50,6 +50,7 @@ module.exports = {
         ]
     },
     plugins: [
+            /*
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.AggressiveMergingPlugin(),
         new webpack.optimize.UglifyJsPlugin({
@@ -67,13 +68,14 @@ module.exports = {
                 // drop_console: true
             }
             ,
-            mangle: {
-                except: ['$super', '$', 'exports', 'require']
-            }
-            ,
+            // mangle: {
+            //     except: ['$super', '$', 'exports', 'require']
+            // }
+            // ,
             output: {
                 comments: false
             }
         })
+        */
     ]
 };

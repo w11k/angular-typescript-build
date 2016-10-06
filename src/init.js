@@ -14,10 +14,10 @@ require("angular-bootstrap");
 require("./app");
 require("./routes");
 require("./home/HomeService");
-// require("./home/HomeController");
-// require("./legacy/LegacyService");
+require("./home/HomeController");
+require("./legacy/LegacyService");
 
 
 // Bootstrap Angular
 
-// angular.bootstrap(document, ["app"], {strictDi: true});
+angular.bootstrap(document, ["app"], {strictDi: false});
