@@ -1,4 +1,4 @@
-import {appModule} from "./app";
+import {appModule} from "./appModule";
 
 appModule.config(($stateProvider: any, $urlRouterProvider: any) => {
     "ngInject";

@@ -1,5 +1,5 @@
 import {HomeService} from "./HomeService";
-import {appModule} from "../app";
+import {appModule} from "../appModule";
 
 class HomeController {
 

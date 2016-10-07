@@ -39,6 +39,7 @@
     "matchdep": "~0.1.2",
     "merge2": "latest",
     "mkdirp": "latest",
+    "ng-annotate-webpack-plugin": "^0.1.3",
     "path": "^0.12.7",
     "run-sequence": "latest",
     "stream-series": "latest",

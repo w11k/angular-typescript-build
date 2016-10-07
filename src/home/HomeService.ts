@@ -1,4 +1,4 @@
-import {appModule} from "../app";
+import {appModule} from "../appModule";
 
 export class HomeService {
 

@@ -1,17 +1,8 @@
-// global libs
-
-require("lodash");
-require("angular");
-require("angular-cookies");
-require("angular-sanitize");
-require("angular-animate");
-require("angular-ui-router");
-require("angular-bootstrap");
 
 
 // app modules
 
-require("./app");
+require("./appModule");
 require("./routes");
 require("./home/HomeService");
 require("./home/HomeController");

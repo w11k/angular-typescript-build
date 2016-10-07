@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const path = require("path");
 
+var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+
 function bower(pathSuffix) {
     return path.resolve("./bower_components/" + pathSuffix);
 }
@@ -9,17 +11,21 @@ function node_modules(pathSuffix) {
     return path.resolve("./node_modules/" + pathSuffix);
 }
 
+//noinspection JSPotentiallyInvalidConstructorUsage
 module.exports = {
-    entry: "./src/init.js",
+    entry: {
+        app: "./src/app.js",
+        libraries: "./src/libraries.js"
+    },
     output: {
         path: __dirname,
-        filename: "target/build/bundle.js"
+        filename: "target/build/[name].js"
     },
     resolve: {
         extensions: ["", '.js', '.ts', '.tsx']
         ,
         alias: {
-            // "lodash": node_modules("lodash/lodash.min.js"),
+            "lodash": node_modules("lodash/lodash.min.js"),
             "angular": bower("angular/angular.min.js"),
             "angular-bootstrap": bower("angular-bootstrap/ui-bootstrap.min.js"),
             "angular-sanitize": bower("angular-sanitize/angular-sanitize.min.js"),
@@ -31,7 +37,7 @@ module.exports = {
             path.resolve('./bower_components')
         ]
     },
-    devtool: 'source-map',
+    // devtool: 'source-map',
     // devtool: 'source-map',
     // devtool: 'cheap-module-eval-source-map',
     // devServer: {
@@ -50,9 +56,13 @@ module.exports = {
         ]
     },
     plugins: [
-            /*
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.AggressiveMergingPlugin(),
+        new webpack.optimize.CommonsChunkPlugin("libraries", "target/build/libraries.js"),
+        new webpack.SourceMapDevToolPlugin({
+            test: /.*app\.js/,
+            filename: "[file].map"
+        }),
+        // new webpack.optimize.DedupePlugin(),
+        // new webpack.optimize.AggressiveMergingPlugin(),
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
             compress: {
@@ -68,14 +78,14 @@ module.exports = {
                 // drop_console: true
             }
             ,
-            // mangle: {
-            //     except: ['$super', '$', 'exports', 'require']
-            // }
-            // ,
+            mangle: {
+                except: ['$super', '$', 'exports', 'require']
+            }
+            ,
             output: {
                 comments: false
             }
-        })
-        */
+        }),
+        new ngAnnotatePlugin()
     ]
 };
